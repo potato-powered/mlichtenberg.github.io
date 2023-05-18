@@ -1,0 +1,259 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 800px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "Abkhazia", "image": "flags/ge-ab.svg", "label": "Abkhazia", "shape": "image", "title": "Abkhazia"}, {"color": "#97c2fc", "id": "Afghanistan", "image": "flags/af.svg", "label": "Afghanistan", "shape": "image", "title": "Afghanistan"}, {"color": "#97c2fc", "id": "Albania", "image": "flags/al.svg", "label": "Albania", "shape": "image", "title": "Albania"}, {"color": "#97c2fc", "id": "Algeria", "image": "flags/dz.svg", "label": "Algeria", "shape": "image", "title": "Algeria"}, {"color": "#97c2fc", "id": "Andorra", "image": "flags/ad.svg", "label": "Andorra", "shape": "image", "title": "Andorra"}, {"color": "#97c2fc", "id": "Angola", "image": "flags/ao.svg", "label": "Angola", "shape": "image", "title": "Angola"}, {"color": "#97c2fc", "id": "AntiguaandBarbuda", "image": "flags/ag.svg", "label": "AntiguaandBarbuda", "shape": "image", "title": "AntiguaandBarbuda"}, {"color": "#97c2fc", "id": "Argentina", "image": "flags/ar.svg", "label": "Argentina", "shape": "image", "title": "Argentina"}, {"color": "#97c2fc", "id": "Armenia", "image": "flags/am.svg", "label": "Armenia", "shape": "image", "title": "Armenia"}, {"color": "#97c2fc", "id": "Australia", "image": "flags/au.svg", "label": "Australia", "shape": "image", "title": "Australia"}, {"color": "#97c2fc", "fixed": false, "id": "Austria", "image": "flags/at.svg", "label": "Austria", "shape": "image", "title": "Austria", "x": 0, "y": -950}, {"color": "#97c2fc", "id": "Azerbaijan", "image": "flags/az.svg", "label": "Azerbaijan", "shape": "image", "title": "Azerbaijan"}, {"color": "#97c2fc", "id": "Bahamas", "image": "flags/bs.svg", "label": "Bahamas", "shape": "image", "title": "Bahamas"}, {"color": "#97c2fc", "id": "Bahrain", "image": "flags/bh.svg", "label": "Bahrain", "shape": "image", "title": "Bahrain"}, {"color": "#97c2fc", "id": "Bangladesh", "image": "flags/bd.svg", "label": "Bangladesh", "shape": "image", "title": "Bangladesh"}, {"color": "#97c2fc", "id": "Barbados", "image": "flags/bb.svg", "label": "Barbados", "shape": "image", "title": "Barbados"}, {"color": "#97c2fc", "id": "Belarus", "image": "flags/by.svg", "label": "Belarus", "shape": "image", "title": "Belarus"}, {"color": "#97c2fc", "id": "Belgium", "image": "flags/be.svg", "label": "Belgium", "shape": "image", "title": "Belgium"}, {"color": "#97c2fc", "id": "Belize", "image": "flags/bz.svg", "label": "Belize", "shape": "image", "title": "Belize"}, {"color": "#97c2fc", "fixed": false, "id": "Benin", "image": "flags/bj.svg", "label": "Benin", "shape": "image", "title": "Benin", "x": -1000, "y": 800}, {"color": "#97c2fc", "id": "Bhutan", "image": "flags/bt.svg", "label": "Bhutan", "shape": "image", "title": "Bhutan"}, {"color": "#97c2fc", "id": "Bolivia", "image": "flags/bo.svg", "label": "Bolivia", "shape": "image", "title": "Bolivia"}, {"color": "#97c2fc", "id": "BosniaandHerzegovina", "image": "flags/ba.svg", "label": "BosniaandHerzegovina", "shape": "image", "title": "BosniaandHerzegovina"}, {"color": "#97c2fc", "id": "Botswana", "image": "flags/bw.svg", "label": "Botswana", "shape": "image", "title": "Botswana"}, {"color": "#97c2fc", "fixed": false, "id": "Brazil", "image": "flags/br.svg", "label": "Brazil", "shape": "image", "title": "Brazil", "x": -1000, "y": -700}, {"color": "#97c2fc", "id": "Brunei", "image": "flags/bn.svg", "label": "Brunei", "shape": "image", "title": "Brunei"}, {"color": "#97c2fc", "id": "Bulgaria", "image": "flags/bg.svg", "label": "Bulgaria", "shape": "image", "title": "Bulgaria"}, {"color": "#97c2fc", "id": "BurkinaFaso", "image": "flags/bf.svg", "label": "BurkinaFaso", "shape": "image", "title": "BurkinaFaso"}, {"color": "#97c2fc", "id": "Burundi", "image": "flags/bi.svg", "label": "Burundi", "shape": "image", "title": "Burundi"}, {"color": "#97c2fc", "id": "Cambodia", "image": "flags/kh.svg", "label": "Cambodia", "shape": "image", "title": "Cambodia"}, {"color": "#97c2fc", "fixed": false, "id": "Cameroon", "image": "flags/cm.svg", "label": "Cameroon", "shape": "image", "title": "Cameroon", "x": -700, "y": 1150}, {"color": "#97c2fc", "id": "Canada", "image": "flags/ca.svg", "label": "Canada", "shape": "image", "title": "Canada"}, {"color": "#97c2fc", "id": "CapeVerde", "image": "flags/bn.svg", "label": "CapeVerde", "shape": "image", "title": "CapeVerde"}, {"color": "#97c2fc", "id": "CentralAfricanRepublic", "image": "flags/cf.svg", "label": "CentralAfricanRepublic", "shape": "image", "title": "CentralAfricanRepublic"}, {"color": "#97c2fc", "id": "Chad", "image": "flags/td.svg", "label": "Chad", "shape": "image", "title": "Chad"}, {"color": "#97c2fc", "id": "Chile", "image": "flags/cl.svg", "label": "Chile", "shape": "image", "title": "Chile"}, {"color": "#97c2fc", "fixed": false, "id": "China", "image": "flags/cn.svg", "label": "China", "shape": "image", "title": "China", "x": 1200, "y": -200}, {"color": "#97c2fc", "fixed": false, "id": "Colombia", "image": "flags/co.svg", "label": "Colombia", "shape": "image", "title": "Colombia", "x": -1100, "y": -200}, {"color": "#97c2fc", "id": "Comoros", "image": "flags/km.svg", "label": "Comoros", "shape": "image", "title": "Comoros"}, {"color": "#97c2fc", "id": "DemocraticRepublicoftheCongo", "image": "flags/cd.svg", "label": "DemocraticRepublicoftheCongo", "shape": "image", "title": "DemocraticRepublicoftheCongo"}, {"color": "#97c2fc", "id": "RepublicoftheCongo", "image": "flags/cg.svg", "label": "RepublicoftheCongo", "shape": "image", "title": "RepublicoftheCongo"}, {"color": "#97c2fc", "id": "CostaRica", "image": "flags/cr.svg", "label": "CostaRica", "shape": "image", "title": "CostaRica"}, {"color": "#97c2fc", "fixed": false, "id": "CotedIvoire", "image": "flags/ci.svg", "label": "CotedIvoire", "shape": "image", "title": "CotedIvoire", "x": -1400, "y": 600}, {"color": "#97c2fc", "id": "Croatia", "image": "flags/hr.svg", "label": "Croatia", "shape": "image", "title": "Croatia"}, {"color": "#97c2fc", "id": "Cuba", "image": "flags/cu.svg", "label": "Cuba", "shape": "image", "title": "Cuba"}, {"color": "#97c2fc", "id": "Cyprus", "image": "flags/cy.svg", "label": "Cyprus", "shape": "image", "title": "Cyprus"}, {"color": "#97c2fc", "id": "CzechRepublic", "image": "flags/cz.svg", "label": "CzechRepublic", "shape": "image", "title": "CzechRepublic"}, {"color": "#97c2fc", "id": "Denmark", "image": "flags/dk.svg", "label": "Denmark", "shape": "image", "title": "Denmark"}, {"color": "#97c2fc", "id": "Djibouti", "image": "flags/dj.svg", "label": "Djibouti", "shape": "image", "title": "Djibouti"}, {"color": "#97c2fc", "id": "Dominica", "image": "flags/dm.svg", "label": "Dominica", "shape": "image", "title": "Dominica"}, {"color": "#97c2fc", "id": "DominicanRepublic", "image": "flags/do.svg", "label": "DominicanRepublic", "shape": "image", "title": "DominicanRepublic"}, {"color": "#97c2fc", "id": "EastTimor", "image": "flags/tp.svg", "label": "EastTimor", "shape": "image", "title": "EastTimor"}, {"color": "#97c2fc", "id": "Ecuador", "image": "flags/ec.svg", "label": "Ecuador", "shape": "image", "title": "Ecuador"}, {"color": "#97c2fc", "fixed": false, "id": "Egypt", "image": "flags/eg.svg", "label": "Egypt", "shape": "image", "title": "Egypt", "x": -300, "y": 250}, {"color": "#97c2fc", "id": "ElSalvador", "image": "flags/sv.svg", "label": "ElSalvador", "shape": "image", "title": "ElSalvador"}, {"color": "#97c2fc", "id": "EquatorialGuinea", "image": "flags/gq.svg", "label": "EquatorialGuinea", "shape": "image", "title": "EquatorialGuinea"}, {"color": "#97c2fc", "id": "Eritrea", "image": "flags/er.svg", "label": "Eritrea", "shape": "image", "title": "Eritrea"}, {"color": "#97c2fc", "id": "Estonia", "image": "flags/ee.svg", "label": "Estonia", "shape": "image", "title": "Estonia"}, {"color": "#97c2fc", "id": "Eswatini", "image": "flags/sz.svg", "label": "Eswatini", "shape": "image", "title": "Eswatini"}, {"color": "#97c2fc", "id": "Ethiopia", "image": "flags/et.svg", "label": "Ethiopia", "shape": "image", "title": "Ethiopia"}, {"color": "#97c2fc", "id": "Fiji", "image": "flags/fj.svg", "label": "Fiji", "shape": "image", "title": "Fiji"}, {"color": "#97c2fc", "id": "Finland", "image": "flags/fi.svg", "label": "Finland", "shape": "image", "title": "Finland"}, {"color": "#97c2fc", "id": "France", "image": "flags/fr.svg", "label": "France", "shape": "image", "title": "France"}, {"color": "#97c2fc", "id": "Gabon", "image": "flags/ga.svg", "label": "Gabon", "shape": "image", "title": "Gabon"}, {"color": "#97c2fc", "id": "TheGambia", "image": "flags/gm.svg", "label": "TheGambia", "shape": "image", "title": "TheGambia"}, {"color": "#97c2fc", "id": "Georgia", "image": "flags/ge.svg", "label": "Georgia", "shape": "image", "title": "Georgia"}, {"color": "#97c2fc", "id": "Germany", "image": "flags/de.svg", "label": "Germany", "shape": "image", "title": "Germany"}, {"color": "#97c2fc", "id": "Ghana", "image": "flags/gh.svg", "label": "Ghana", "shape": "image", "title": "Ghana"}, {"color": "#97c2fc", "fixed": false, "id": "Greece", "image": "flags/gr.svg", "label": "Greece", "shape": "image", "title": "Greece", "x": 0, "y": 150}, {"color": "#97c2fc", "id": "Grenada", "image": "flags/gd.svg", "label": "Grenada", "shape": "image", "title": "Grenada"}, {"color": "#97c2fc", "id": "Guatemala", "image": "flags/gt.svg", "label": "Guatemala", "shape": "image", "title": "Guatemala"}, {"color": "#97c2fc", "id": "Guinea", "image": "flags/gn.svg", "label": "Guinea", "shape": "image", "title": "Guinea"}, {"color": "#97c2fc", "id": "Guinea-Bissau", "image": "flags/gw.svg", "label": "Guinea-Bissau", "shape": "image", "title": "Guinea-Bissau"}, {"color": "#97c2fc", "id": "Guyana", "image": "flags/gy.svg", "label": "Guyana", "shape": "image", "title": "Guyana"}, {"color": "#97c2fc", "id": "Haiti", "image": "flags/ht.svg", "label": "Haiti", "shape": "image", "title": "Haiti"}, {"color": "#97c2fc", "id": "Honduras", "image": "flags/hn.svg", "label": "Honduras", "shape": "image", "title": "Honduras"}, {"color": "#97c2fc", "id": "HongKong", "image": "flags/hk.svg", "label": "HongKong", "shape": "image", "title": "HongKong"}, {"color": "#97c2fc", "id": "Hungary", "image": "flags/hu.svg", "label": "Hungary", "shape": "image", "title": "Hungary"}, {"color": "#97c2fc", "id": "Iceland", "image": "flags/is.svg", "label": "Iceland", "shape": "image", "title": "Iceland"}, {"color": "#97c2fc", "fixed": false, "id": "India", "image": "flags/in.svg", "label": "India", "shape": "image", "title": "India", "x": 1000, "y": 800}, {"color": "#97c2fc", "id": "Indonesia", "image": "flags/id.svg", "label": "Indonesia", "shape": "image", "title": "Indonesia"}, {"color": "#97c2fc", "id": "Iran", "image": "flags/ir.svg", "label": "Iran", "shape": "image", "title": "Iran"}, {"color": "#97c2fc", "id": "Iraq", "image": "flags/iq.svg", "label": "Iraq", "shape": "image", "title": "Iraq"}, {"color": "#97c2fc", "id": "Ireland", "image": "flags/ie.svg", "label": "Ireland", "shape": "image", "title": "Ireland"}, {"color": "#97c2fc", "id": "Israel", "image": "flags/il.svg", "label": "Israel", "shape": "image", "title": "Israel"}, {"color": "#97c2fc", "fixed": false, "id": "Italy", "image": "flags/it.svg", "label": "Italy", "shape": "image", "title": "Italy", "x": -300, "y": -600}, {"color": "#97c2fc", "id": "Jamaica", "image": "flags/jm.svg", "label": "Jamaica", "shape": "image", "title": "Jamaica"}, {"color": "#97c2fc", "id": "Japan", "image": "flags/jp.svg", "label": "Japan", "shape": "image", "title": "Japan"}, {"color": "#97c2fc", "id": "Jordan", "image": "flags/jo.svg", "label": "Jordan", "shape": "image", "title": "Jordan"}, {"color": "#97c2fc", "id": "Kazakhstan", "image": "flags/kz.svg", "label": "Kazakhstan", "shape": "image", "title": "Kazakhstan"}, {"color": "#97c2fc", "fixed": false, "id": "Kenya", "image": "flags/ke.svg", "label": "Kenya", "shape": "image", "title": "Kenya", "x": 0, "y": 800}, {"color": "#97c2fc", "id": "Kiribati", "image": "flags/ki.svg", "label": "Kiribati", "shape": "image", "title": "Kiribati"}, {"color": "#97c2fc", "id": "NorthKorea", "image": "flags/kp.svg", "label": "NorthKorea", "shape": "image", "title": "NorthKorea"}, {"color": "#97c2fc", "id": "SouthKorea", "image": "flags/kr.svg", "label": "SouthKorea", "shape": "image", "title": "SouthKorea"}, {"color": "#97c2fc", "id": "Kosovo", "image": "flags/xk.svg", "label": "Kosovo", "shape": "image", "title": "Kosovo"}, {"color": "#97c2fc", "id": "Kuwait", "image": "flags/kw.svg", "label": "Kuwait", "shape": "image", "title": "Kuwait"}, {"color": "#97c2fc", "id": "Kyrgyzstan", "image": "flags/kg.svg", "label": "Kyrgyzstan", "shape": "image", "title": "Kyrgyzstan"}, {"color": "#97c2fc", "id": "Laos", "image": "flags/la.svg", "label": "Laos", "shape": "image", "title": "Laos"}, {"color": "#97c2fc", "id": "Latvia", "image": "flags/lv.svg", "label": "Latvia", "shape": "image", "title": "Latvia"}, {"color": "#97c2fc", "id": "Lebanon", "image": "flags/lb.svg", "label": "Lebanon", "shape": "image", "title": "Lebanon"}, {"color": "#97c2fc", "id": "Lesotho", "image": "flags/ls.svg", "label": "Lesotho", "shape": "image", "title": "Lesotho"}, {"color": "#97c2fc", "id": "Liberia", "image": "flags/lr.svg", "label": "Liberia", "shape": "image", "title": "Liberia"}, {"color": "#97c2fc", "id": "Libya", "image": "flags/ly.svg", "label": "Libya", "shape": "image", "title": "Libya"}, {"color": "#97c2fc", "id": "Liechtenstein", "image": "flags/li.svg", "label": "Liechtenstein", "shape": "image", "title": "Liechtenstein"}, {"color": "#97c2fc", "id": "Lithuania", "image": "flags/lt.svg", "label": "Lithuania", "shape": "image", "title": "Lithuania"}, {"color": "#97c2fc", "id": "Luxembourg", "image": "flags/lu.svg", "label": "Luxembourg", "shape": "image", "title": "Luxembourg"}, {"color": "#97c2fc", "id": "Madagascar", "image": "flags/mg.svg", "label": "Madagascar", "shape": "image", "title": "Madagascar"}, {"color": "#97c2fc", "id": "Portugal", "image": "flags/pt.svg", "label": "Portugal", "shape": "image", "title": "Portugal"}, {"color": "#97c2fc", "id": "Malawi", "image": "flags/mw.svg", "label": "Malawi", "shape": "image", "title": "Malawi"}, {"color": "#97c2fc", "id": "Malaysia", "image": "flags/my.svg", "label": "Malaysia", "shape": "image", "title": "Malaysia"}, {"color": "#97c2fc", "id": "Maldives", "image": "flags/mv.svg", "label": "Maldives", "shape": "image", "title": "Maldives"}, {"color": "#97c2fc", "id": "Mali", "image": "flags/ml.svg", "label": "Mali", "shape": "image", "title": "Mali"}, {"color": "#97c2fc", "id": "Malta", "image": "flags/mt.svg", "label": "Malta", "shape": "image", "title": "Malta"}, {"color": "#97c2fc", "id": "MarshallIslands", "image": "flags/mh.svg", "label": "MarshallIslands", "shape": "image", "title": "MarshallIslands"}, {"color": "#97c2fc", "id": "Mauritania", "image": "flags/mr.svg", "label": "Mauritania", "shape": "image", "title": "Mauritania"}, {"color": "#97c2fc", "id": "Mauritius", "image": "flags/mu.svg", "label": "Mauritius", "shape": "image", "title": "Mauritius"}, {"color": "#97c2fc", "fixed": false, "id": "Mexico", "image": "flags/mx.svg", "label": "Mexico", "shape": "image", "title": "Mexico", "x": -750, "y": -1150}, {"color": "#97c2fc", "id": "FederatedStatesofMicronesia", "image": "flags/fm.svg", "label": "FederatedStatesofMicronesia", "shape": "image", "title": "FederatedStatesofMicronesia"}, {"color": "#97c2fc", "id": "Moldova", "image": "flags/md.svg", "label": "Moldova", "shape": "image", "title": "Moldova"}, {"color": "#97c2fc", "id": "Monaco", "image": "flags/mc.svg", "label": "Monaco", "shape": "image", "title": "Monaco"}, {"color": "#97c2fc", "id": "Mongolia", "image": "flags/mn.svg", "label": "Mongolia", "shape": "image", "title": "Mongolia"}, {"color": "#97c2fc", "id": "Montenegro", "image": "flags/me.svg", "label": "Montenegro", "shape": "image", "title": "Montenegro"}, {"color": "#97c2fc", "fixed": false, "id": "Morocco", "image": "flags/ma.svg", "label": "Morocco", "shape": "image", "title": "Morocco", "x": -700, "y": 100}, {"color": "#97c2fc", "id": "Mozambique", "image": "flags/mz.svg", "label": "Mozambique", "shape": "image", "title": "Mozambique"}, {"color": "#97c2fc", "id": "Myanmar", "image": "flags/mm.svg", "label": "Myanmar", "shape": "image", "title": "Myanmar"}, {"color": "#97c2fc", "fixed": false, "id": "Namibia", "image": "flags/na.svg", "label": "Namibia", "shape": "image", "title": "Namibia", "x": 50, "y": 1500}, {"color": "#97c2fc", "id": "Nauru", "image": "flags/nr.svg", "label": "Nauru", "shape": "image", "title": "Nauru"}, {"color": "#97c2fc", "id": "Nepal", "image": "flags/np.svg", "label": "Nepal", "shape": "image", "title": "Nepal"}, {"color": "#97c2fc", "id": "Netherlands", "image": "flags/nl.svg", "label": "Netherlands", "shape": "image", "title": "Netherlands"}, {"color": "#97c2fc", "id": "NewZealand", "image": "flags/nz.svg", "label": "NewZealand", "shape": "image", "title": "NewZealand"}, {"color": "#97c2fc", "fixed": false, "id": "Nicaragua", "image": "flags/ni.svg", "label": "Nicaragua", "shape": "image", "title": "Nicaragua", "x": -1250, "y": -900}, {"color": "#97c2fc", "id": "Niger", "image": "flags/ne.svg", "label": "Niger", "shape": "image", "title": "Niger"}, {"color": "#97c2fc", "id": "Nigeria", "image": "flags/ng.svg", "label": "Nigeria", "shape": "image", "title": "Nigeria"}, {"color": "#97c2fc", "fixed": false, "id": "NorthMacedonia", "image": "flags/mk.svg", "label": "NorthMacedonia", "shape": "image", "title": "NorthMacedonia", "x": 0, "y": 0}, {"color": "#97c2fc", "id": "Norway", "image": "flags/no.svg", "label": "Norway", "shape": "image", "title": "Norway"}, {"color": "#97c2fc", "id": "Oman", "image": "flags/om.svg", "label": "Oman", "shape": "image", "title": "Oman"}, {"color": "#97c2fc", "id": "Pakistan", "image": "flags/pk.svg", "label": "Pakistan", "shape": "image", "title": "Pakistan"}, {"color": "#97c2fc", "id": "Palau", "image": "flags/pw.svg", "label": "Palau", "shape": "image", "title": "Palau"}, {"color": "#97c2fc", "id": "Palestine", "image": "flags/ps.svg", "label": "Palestine", "shape": "image", "title": "Palestine"}, {"color": "#97c2fc", "id": "Panama", "image": "flags/pa.svg", "label": "Panama", "shape": "image", "title": "Panama"}, {"color": "#97c2fc", "id": "PapuaNewGuinea", "image": "flags/pg.svg", "label": "PapuaNewGuinea", "shape": "image", "title": "PapuaNewGuinea"}, {"color": "#97c2fc", "id": "Paraguay", "image": "flags/py.svg", "label": "Paraguay", "shape": "image", "title": "Paraguay"}, {"color": "#97c2fc", "id": "Peru", "image": "flags/pe.svg", "label": "Peru", "shape": "image", "title": "Peru"}, {"color": "#97c2fc", "id": "Philippines", "image": "flags/ph.svg", "label": "Philippines", "shape": "image", "title": "Philippines"}, {"color": "#97c2fc", "id": "Poland", "image": "flags/pl.svg", "label": "Poland", "shape": "image", "title": "Poland"}, {"color": "#97c2fc", "id": "Qatar", "image": "flags/qa.svg", "label": "Qatar", "shape": "image", "title": "Qatar"}, {"color": "#97c2fc", "id": "Romania", "image": "flags/ro.svg", "label": "Romania", "shape": "image", "title": "Romania"}, {"color": "#97c2fc", "id": "Russia", "image": "flags/ru.svg", "label": "Russia", "shape": "image", "title": "Russia"}, {"color": "#97c2fc", "id": "Rwanda", "image": "flags/rw.svg", "label": "Rwanda", "shape": "image", "title": "Rwanda"}, {"color": "#97c2fc", "id": "SaintKittsandNevis", "image": "flags/kn.svg", "label": "SaintKittsandNevis", "shape": "image", "title": "SaintKittsandNevis"}, {"color": "#97c2fc", "id": "SaintLucia", "image": "flags/lc.svg", "label": "SaintLucia", "shape": "image", "title": "SaintLucia"}, {"color": "#97c2fc", "id": "SaintVincentandtheGrenadines", "image": "flags/vc.svg", "label": "SaintVincentandtheGrenadines", "shape": "image", "title": "SaintVincentandtheGrenadines"}, {"color": "#97c2fc", "id": "Samoa", "image": "flags/ws.svg", "label": "Samoa", "shape": "image", "title": "Samoa"}, {"color": "#97c2fc", "id": "SanMarino", "image": "flags/sm.svg", "label": "SanMarino", "shape": "image", "title": "SanMarino"}, {"color": "#97c2fc", "id": "S\u00e3oTom\u00e9andPr\u00edncipe", "image": "flags/st.svg", "label": "S\u00e3oTom\u00e9andPr\u00edncipe", "shape": "image", "title": "S\u00e3oTom\u00e9andPr\u00edncipe"}, {"color": "#97c2fc", "fixed": false, "id": "SaudiArabia", "image": "flags/sa.svg", "label": "SaudiArabia", "shape": "image", "title": "SaudiArabia", "x": 600, "y": 800}, {"color": "#97c2fc", "fixed": false, "id": "Senegal", "image": "flags/sn.svg", "label": "Senegal", "shape": "image", "title": "Senegal", "x": -1050, "y": 200}, {"color": "#97c2fc", "id": "Serbia", "image": "flags/rs.svg", "label": "Serbia", "shape": "image", "title": "Serbia"}, {"color": "#97c2fc", "id": "Seychelles", "image": "flags/sc.svg", "label": "Seychelles", "shape": "image", "title": "Seychelles"}, {"color": "#97c2fc", "id": "SierraLeone", "image": "flags/sl.svg", "label": "SierraLeone", "shape": "image", "title": "SierraLeone"}, {"color": "#97c2fc", "id": "Singapore", "image": "flags/sg.svg", "label": "Singapore", "shape": "image", "title": "Singapore"}, {"color": "#97c2fc", "id": "Slovakia", "image": "flags/sk.svg", "label": "Slovakia", "shape": "image", "title": "Slovakia"}, {"color": "#97c2fc", "id": "Slovenia", "image": "flags/si.svg", "label": "Slovenia", "shape": "image", "title": "Slovenia"}, {"color": "#97c2fc", "id": "SolomonIslands", "image": "flags/sb.svg", "label": "SolomonIslands", "shape": "image", "title": "SolomonIslands"}, {"color": "#97c2fc", "id": "Somalia", "image": "flags/so.svg", "label": "Somalia", "shape": "image", "title": "Somalia"}, {"color": "#97c2fc", "id": "SouthAfrica", "image": "flags/za.svg", "label": "SouthAfrica", "shape": "image", "title": "SouthAfrica"}, {"color": "#97c2fc", "id": "SouthOssetia", "image": "flags/xo.svg", "label": "SouthOssetia", "shape": "image", "title": "SouthOssetia"}, {"color": "#97c2fc", "id": "SouthSudan", "image": "flags/ss.svg", "label": "SouthSudan", "shape": "image", "title": "SouthSudan"}, {"color": "#97c2fc", "id": "Spain", "image": "flags/es.svg", "label": "Spain", "shape": "image", "title": "Spain"}, {"color": "#97c2fc", "id": "SriLanka", "image": "flags/lk.svg", "label": "SriLanka", "shape": "image", "title": "SriLanka"}, {"color": "#97c2fc", "id": "Sudan", "image": "flags/sd.svg", "label": "Sudan", "shape": "image", "title": "Sudan"}, {"color": "#97c2fc", "fixed": false, "id": "Suriname", "image": "flags/sr.svg", "label": "Suriname", "shape": "image", "title": "Suriname", "x": -1100, "y": -1000}, {"color": "#97c2fc", "id": "Sweden", "image": "flags/se.svg", "label": "Sweden", "shape": "image", "title": "Sweden"}, {"color": "#97c2fc", "id": "Switzerland", "image": "flags/ch.svg", "label": "Switzerland", "shape": "image", "title": "Switzerland"}, {"color": "#97c2fc", "id": "Syria", "image": "flags/sy.svg", "label": "Syria", "shape": "image", "title": "Syria"}, {"color": "#97c2fc", "id": "Taiwan", "image": "flags/tw.svg", "label": "Taiwan", "shape": "image", "title": "Taiwan"}, {"color": "#97c2fc", "id": "Tajikistan", "image": "flags/tj.svg", "label": "Tajikistan", "shape": "image", "title": "Tajikistan"}, {"color": "#97c2fc", "id": "Tanzania", "image": "flags/tz.svg", "label": "Tanzania", "shape": "image", "title": "Tanzania"}, {"color": "#97c2fc", "fixed": false, "id": "Thailand", "image": "flags/th.svg", "label": "Thailand", "shape": "image", "title": "Thailand", "x": 1500, "y": 0}, {"color": "#97c2fc", "id": "Togo", "image": "flags/tg.svg", "label": "Togo", "shape": "image", "title": "Togo"}, {"color": "#97c2fc", "id": "Tonga", "image": "flags/to.svg", "label": "Tonga", "shape": "image", "title": "Tonga"}, {"color": "#97c2fc", "id": "TrinidadandTobago", "image": "flags/tt.svg", "label": "TrinidadandTobago", "shape": "image", "title": "TrinidadandTobago"}, {"color": "#97c2fc", "id": "Tunisia", "image": "flags/tn.svg", "label": "Tunisia", "shape": "image", "title": "Tunisia"}, {"color": "#97c2fc", "id": "Turkey", "image": "flags/tr.svg", "label": "Turkey", "shape": "image", "title": "Turkey"}, {"color": "#97c2fc", "id": "Turkmenistan", "image": "flags/tm.svg", "label": "Turkmenistan", "shape": "image", "title": "Turkmenistan"}, {"color": "#97c2fc", "id": "Tuvalu", "image": "flags/tv.svg", "label": "Tuvalu", "shape": "image", "title": "Tuvalu"}, {"color": "#97c2fc", "id": "Uganda", "image": "flags/ug.svg", "label": "Uganda", "shape": "image", "title": "Uganda"}, {"color": "#97c2fc", "id": "Ukraine", "image": "flags/ua.svg", "label": "Ukraine", "shape": "image", "title": "Ukraine"}, {"color": "#97c2fc", "id": "UnitedArabEmirates", "image": "flags/ae.svg", "label": "UnitedArabEmirates", "shape": "image", "title": "UnitedArabEmirates"}, {"color": "#97c2fc", "id": "UnitedKingdom", "image": "flags/gb.svg", "label": "UnitedKingdom", "shape": "image", "title": "UnitedKingdom"}, {"color": "#97c2fc", "fixed": false, "id": "UnitedStates", "image": "flags/us.svg", "label": "UnitedStates", "shape": "image", "title": "UnitedStates", "x": -750, "y": -1300}, {"color": "#97c2fc", "fixed": false, "id": "Uruguay", "image": "flags/uy.svg", "label": "Uruguay", "shape": "image", "title": "Uruguay", "x": -950, "y": -900}, {"color": "#97c2fc", "id": "Uzbekistan", "image": "flags/uz.svg", "label": "Uzbekistan", "shape": "image", "title": "Uzbekistan"}, {"color": "#97c2fc", "id": "Vanuatu", "image": "flags/vu.svg", "label": "Vanuatu", "shape": "image", "title": "Vanuatu"}, {"color": "#97c2fc", "id": "VaticanCity", "image": "flags/va.svg", "label": "VaticanCity", "shape": "image", "title": "VaticanCity"}, {"color": "#97c2fc", "id": "Venezuela", "image": "flags/ve.svg", "label": "Venezuela", "shape": "image", "title": "Venezuela"}, {"color": "#97c2fc", "id": "Vietnam", "image": "flags/vn.svg", "label": "Vietnam", "shape": "image", "title": "Vietnam"}, {"color": "#97c2fc", "id": "WesternSahara", "image": "flags/eh.svg", "label": "WesternSahara", "shape": "image", "title": "WesternSahara"}, {"color": "#97c2fc", "id": "Yemen", "image": "flags/ye.svg", "label": "Yemen", "shape": "image", "title": "Yemen"}, {"color": "#97c2fc", "id": "Zambia", "image": "flags/zm.svg", "label": "Zambia", "shape": "image", "title": "Zambia"}, {"color": "#97c2fc", "id": "Zimbabwe", "image": "flags/zw.svg", "label": "Zimbabwe", "shape": "image", "title": "Zimbabwe"}]);
+                  edges = new vis.DataSet([{"from": "Abkhazia", "to": "Russia"}, {"from": "Abkhazia", "to": "Georgia"}, {"from": "Afghanistan", "to": "China"}, {"from": "Afghanistan", "to": "Iran"}, {"from": "Afghanistan", "to": "Pakistan"}, {"from": "Afghanistan", "to": "Tajikistan"}, {"from": "Afghanistan", "to": "Turkmenistan"}, {"from": "Afghanistan", "to": "Uzbekistan"}, {"from": "Afghanistan", "to": "India"}, {"from": "Albania", "to": "Greece"}, {"from": "Albania", "to": "Kosovo"}, {"from": "Albania", "to": "NorthMacedonia"}, {"from": "Albania", "to": "Montenegro"}, {"from": "Algeria", "to": "Libya"}, {"from": "Algeria", "to": "Mali"}, {"from": "Algeria", "to": "Mauritania"}, {"from": "Algeria", "to": "Morocco"}, {"from": "Algeria", "to": "Niger"}, {"from": "Algeria", "to": "Tunisia"}, {"from": "Algeria", "to": "WesternSahara"}, {"from": "Andorra", "to": "France"}, {"from": "Andorra", "to": "Spain"}, {"from": "Angola", "to": "DemocraticRepublicoftheCongo"}, {"from": "Angola", "to": "RepublicoftheCongo"}, {"from": "Angola", "to": "Namibia"}, {"from": "Angola", "to": "Zambia"}, {"from": "Argentina", "to": "Bolivia"}, {"from": "Argentina", "to": "Brazil"}, {"from": "Argentina", "to": "Chile"}, {"from": "Argentina", "to": "Paraguay"}, {"from": "Argentina", "to": "Uruguay"}, {"from": "Armenia", "to": "Azerbaijan"}, {"from": "Armenia", "to": "Georgia"}, {"from": "Armenia", "to": "Iran"}, {"from": "Armenia", "to": "Turkey"}, {"from": "Austria", "to": "CzechRepublic"}, {"from": "Austria", "to": "Germany"}, {"from": "Austria", "to": "Hungary"}, {"from": "Austria", "to": "Italy"}, {"from": "Austria", "to": "Liechtenstein"}, {"from": "Austria", "to": "Slovakia"}, {"from": "Austria", "to": "Slovenia"}, {"from": "Austria", "to": "Switzerland"}, {"from": "Azerbaijan", "to": "Georgia"}, {"from": "Azerbaijan", "to": "Iran"}, {"from": "Azerbaijan", "to": "Russia"}, {"from": "Azerbaijan", "to": "Turkey"}, {"from": "Bangladesh", "to": "India"}, {"from": "Bangladesh", "to": "Myanmar"}, {"from": "Belarus", "to": "Latvia"}, {"from": "Belarus", "to": "Lithuania"}, {"from": "Belarus", "to": "Poland"}, {"from": "Belarus", "to": "Russia"}, {"from": "Belarus", "to": "Ukraine"}, {"from": "Belgium", "to": "France"}, {"from": "Belgium", "to": "Germany"}, {"from": "Belgium", "to": "Luxembourg"}, {"from": "Belgium", "to": "Netherlands"}, {"from": "Belize", "to": "Guatemala"}, {"from": "Belize", "to": "Mexico"}, {"from": "Benin", "to": "BurkinaFaso"}, {"from": "Benin", "to": "Niger"}, {"from": "Benin", "to": "Nigeria"}, {"from": "Benin", "to": "Togo"}, {"from": "Bhutan", "to": "China"}, {"from": "Bhutan", "to": "India"}, {"from": "Bolivia", "to": "Brazil"}, {"from": "Bolivia", "to": "Chile"}, {"from": "Bolivia", "to": "Paraguay"}, {"from": "Bolivia", "to": "Peru"}, {"from": "BosniaandHerzegovina", "to": "Croatia"}, {"from": "BosniaandHerzegovina", "to": "Montenegro"}, {"from": "BosniaandHerzegovina", "to": "Serbia"}, {"from": "Botswana", "to": "Namibia"}, {"from": "Botswana", "to": "SouthAfrica"}, {"from": "Botswana", "to": "Zambia"}, {"from": "Botswana", "to": "Zimbabwe"}, {"from": "Brazil", "to": "Colombia"}, {"from": "Brazil", "to": "France"}, {"from": "Brazil", "to": "Guyana"}, {"from": "Brazil", "to": "Paraguay"}, {"from": "Brazil", "to": "Peru"}, {"from": "Brazil", "to": "Suriname"}, {"from": "Brazil", "to": "Uruguay"}, {"from": "Brazil", "to": "Venezuela"}, {"from": "Brunei", "to": "Malaysia"}, {"from": "Bulgaria", "to": "Greece"}, {"from": "Bulgaria", "to": "NorthMacedonia"}, {"from": "Bulgaria", "to": "Romania"}, {"from": "Bulgaria", "to": "Serbia"}, {"from": "Bulgaria", "to": "Turkey"}, {"from": "BurkinaFaso", "to": "CotedIvoire"}, {"from": "BurkinaFaso", "to": "Ghana"}, {"from": "BurkinaFaso", "to": "Mali"}, {"from": "BurkinaFaso", "to": "Niger"}, {"from": "BurkinaFaso", "to": "Togo"}, {"from": "Burundi", "to": "DemocraticRepublicoftheCongo"}, {"from": "Burundi", "to": "Rwanda"}, {"from": "Burundi", "to": "Tanzania"}, {"from": "Cambodia", "to": "Laos"}, {"from": "Cambodia", "to": "Thailand"}, {"from": "Cambodia", "to": "Vietnam"}, {"from": "Cameroon", "to": "CentralAfricanRepublic"}, {"from": "Cameroon", "to": "Chad"}, {"from": "Cameroon", "to": "RepublicoftheCongo"}, {"from": "Cameroon", "to": "EquatorialGuinea"}, {"from": "Cameroon", "to": "Gabon"}, {"from": "Cameroon", "to": "Nigeria"}, {"from": "Canada", "to": "UnitedStates"}, {"from": "Canada", "to": "Denmark"}, {"from": "CentralAfricanRepublic", "to": "Chad"}, {"from": "CentralAfricanRepublic", "to": "DemocraticRepublicoftheCongo"}, {"from": "CentralAfricanRepublic", "to": "RepublicoftheCongo"}, {"from": "CentralAfricanRepublic", "to": "SouthSudan"}, {"from": "CentralAfricanRepublic", "to": "Sudan"}, {"from": "Chad", "to": "Libya"}, {"from": "Chad", "to": "Niger"}, {"from": "Chad", "to": "Nigeria"}, {"from": "Chad", "to": "Sudan"}, {"from": "Chile", "to": "Peru"}, {"from": "China", "to": "India"}, {"from": "China", "to": "Kazakhstan"}, {"from": "China", "to": "NorthKorea"}, {"from": "China", "to": "Kyrgyzstan"}, {"from": "China", "to": "Laos"}, {"from": "China", "to": "Mongolia"}, {"from": "China", "to": "Myanmar"}, {"from": "China", "to": "Nepal"}, {"from": "China", "to": "Pakistan"}, {"from": "China", "to": "Russia"}, {"from": "China", "to": "Tajikistan"}, {"from": "China", "to": "Vietnam"}, {"from": "Colombia", "to": "Ecuador"}, {"from": "Colombia", "to": "Panama"}, {"from": "Colombia", "to": "Peru"}, {"from": "Colombia", "to": "Venezuela"}, {"from": "DemocraticRepublicoftheCongo", "to": "RepublicoftheCongo"}, {"from": "DemocraticRepublicoftheCongo", "to": "Rwanda"}, {"from": "DemocraticRepublicoftheCongo", "to": "SouthSudan"}, {"from": "DemocraticRepublicoftheCongo", "to": "Tanzania"}, {"from": "DemocraticRepublicoftheCongo", "to": "Uganda"}, {"from": "DemocraticRepublicoftheCongo", "to": "Zambia"}, {"from": "RepublicoftheCongo", "to": "Gabon"}, {"from": "CostaRica", "to": "Nicaragua"}, {"from": "CostaRica", "to": "Panama"}, {"from": "CotedIvoire", "to": "Ghana"}, {"from": "CotedIvoire", "to": "Guinea"}, {"from": "CotedIvoire", "to": "Liberia"}, {"from": "CotedIvoire", "to": "Mali"}, {"from": "Croatia", "to": "Hungary"}, {"from": "Croatia", "to": "Montenegro"}, {"from": "Croatia", "to": "Serbia"}, {"from": "Croatia", "to": "Slovenia"}, {"from": "Cyprus", "to": "UnitedKingdom"}, {"from": "CzechRepublic", "to": "Germany"}, {"from": "CzechRepublic", "to": "Poland"}, {"from": "CzechRepublic", "to": "Slovakia"}, {"from": "Denmark", "to": "Germany"}, {"from": "Djibouti", "to": "Eritrea"}, {"from": "Djibouti", "to": "Ethiopia"}, {"from": "Djibouti", "to": "Somalia"}, {"from": "DominicanRepublic", "to": "Haiti"}, {"from": "EastTimor", "to": "Indonesia"}, {"from": "Ecuador", "to": "Peru"}, {"from": "Egypt", "to": "Palestine"}, {"from": "Egypt", "to": "Israel"}, {"from": "Egypt", "to": "Libya"}, {"from": "Egypt", "to": "Sudan"}, {"from": "ElSalvador", "to": "Guatemala"}, {"from": "ElSalvador", "to": "Honduras"}, {"from": "EquatorialGuinea", "to": "Gabon"}, {"from": "Eritrea", "to": "Ethiopia"}, {"from": "Eritrea", "to": "Sudan"}, {"from": "Estonia", "to": "Latvia"}, {"from": "Estonia", "to": "Russia"}, {"from": "Eswatini", "to": "Mozambique"}, {"from": "Eswatini", "to": "SouthAfrica"}, {"from": "Ethiopia", "to": "Kenya"}, {"from": "Ethiopia", "to": "Somalia"}, {"from": "Ethiopia", "to": "SouthSudan"}, {"from": "Ethiopia", "to": "Sudan"}, {"from": "Finland", "to": "Norway"}, {"from": "Finland", "to": "Sweden"}, {"from": "Finland", "to": "Russia"}, {"from": "France", "to": "Germany"}, {"from": "France", "to": "Italy"}, {"from": "France", "to": "Luxembourg"}, {"from": "France", "to": "Monaco"}, {"from": "France", "to": "Spain"}, {"from": "France", "to": "Switzerland"}, {"from": "France", "to": "Netherlands"}, {"from": "France", "to": "Suriname"}, {"from": "TheGambia", "to": "Senegal"}, {"from": "Georgia", "to": "Russia"}, {"from": "Georgia", "to": "Turkey"}, {"from": "Georgia", "to": "SouthOssetia"}, {"from": "Germany", "to": "Luxembourg"}, {"from": "Germany", "to": "Netherlands"}, {"from": "Germany", "to": "Poland"}, {"from": "Germany", "to": "Switzerland"}, {"from": "Ghana", "to": "Togo"}, {"from": "Greece", "to": "Turkey"}, {"from": "Greece", "to": "NorthMacedonia"}, {"from": "Guatemala", "to": "Honduras"}, {"from": "Guatemala", "to": "Mexico"}, {"from": "Guinea", "to": "Guinea-Bissau"}, {"from": "Guinea", "to": "Liberia"}, {"from": "Guinea", "to": "Mali"}, {"from": "Guinea", "to": "Senegal"}, {"from": "Guinea", "to": "SierraLeone"}, {"from": "Guinea-Bissau", "to": "Senegal"}, {"from": "Guyana", "to": "Suriname"}, {"from": "Guyana", "to": "Venezuela"}, {"from": "Honduras", "to": "Nicaragua"}, {"from": "HongKong", "to": "China"}, {"from": "Hungary", "to": "Romania"}, {"from": "Hungary", "to": "Serbia"}, {"from": "Hungary", "to": "Slovakia"}, {"from": "Hungary", "to": "Slovenia"}, {"from": "Hungary", "to": "Ukraine"}, {"from": "India", "to": "Myanmar"}, {"from": "India", "to": "Nepal"}, {"from": "India", "to": "Pakistan"}, {"from": "India", "to": "SriLanka"}, {"from": "Indonesia", "to": "Malaysia"}, {"from": "Indonesia", "to": "PapuaNewGuinea"}, {"from": "Iran", "to": "Iraq"}, {"from": "Iran", "to": "Pakistan"}, {"from": "Iran", "to": "Turkey"}, {"from": "Iran", "to": "Turkmenistan"}, {"from": "Iraq", "to": "Jordan"}, {"from": "Iraq", "to": "Kuwait"}, {"from": "Iraq", "to": "SaudiArabia"}, {"from": "Iraq", "to": "Syria"}, {"from": "Iraq", "to": "Turkey"}, {"from": "Ireland", "to": "UnitedKingdom"}, {"from": "Israel", "to": "Palestine"}, {"from": "Israel", "to": "Jordan"}, {"from": "Israel", "to": "Lebanon"}, {"from": "Israel", "to": "Syria"}, {"from": "Italy", "to": "SanMarino"}, {"from": "Italy", "to": "Slovenia"}, {"from": "Italy", "to": "Switzerland"}, {"from": "Italy", "to": "VaticanCity"}, {"from": "Jordan", "to": "SaudiArabia"}, {"from": "Jordan", "to": "Syria"}, {"from": "Jordan", "to": "Palestine"}, {"from": "Kazakhstan", "to": "Kyrgyzstan"}, {"from": "Kazakhstan", "to": "Russia"}, {"from": "Kazakhstan", "to": "Turkmenistan"}, {"from": "Kazakhstan", "to": "Uzbekistan"}, {"from": "Kenya", "to": "Somalia"}, {"from": "Kenya", "to": "SouthSudan"}, {"from": "Kenya", "to": "Tanzania"}, {"from": "Kenya", "to": "Uganda"}, {"from": "NorthKorea", "to": "SouthKorea"}, {"from": "NorthKorea", "to": "Russia"}, {"from": "Kosovo", "to": "Montenegro"}, {"from": "Kosovo", "to": "NorthMacedonia"}, {"from": "Kosovo", "to": "Serbia"}, {"from": "Kuwait", "to": "SaudiArabia"}, {"from": "Kyrgyzstan", "to": "Tajikistan"}, {"from": "Kyrgyzstan", "to": "Uzbekistan"}, {"from": "Laos", "to": "Myanmar"}, {"from": "Laos", "to": "Thailand"}, {"from": "Laos", "to": "Vietnam"}, {"from": "Latvia", "to": "Lithuania"}, {"from": "Latvia", "to": "Russia"}, {"from": "Lebanon", "to": "Syria"}, {"from": "Lesotho", "to": "SouthAfrica"}, {"from": "Liberia", "to": "SierraLeone"}, {"from": "Libya", "to": "Niger"}, {"from": "Libya", "to": "Sudan"}, {"from": "Libya", "to": "Tunisia"}, {"from": "Liechtenstein", "to": "Switzerland"}, {"from": "Lithuania", "to": "Poland"}, {"from": "Lithuania", "to": "Russia"}, {"from": "Portugal", "to": "Spain"}, {"from": "Malawi", "to": "Mozambique"}, {"from": "Malawi", "to": "Tanzania"}, {"from": "Malawi", "to": "Zambia"}, {"from": "Malaysia", "to": "Thailand"}, {"from": "Mali", "to": "Mauritania"}, {"from": "Mali", "to": "Niger"}, {"from": "Mali", "to": "Senegal"}, {"from": "Mauritania", "to": "Senegal"}, {"from": "Mauritania", "to": "WesternSahara"}, {"from": "Mexico", "to": "UnitedStates"}, {"from": "Moldova", "to": "Romania"}, {"from": "Moldova", "to": "Ukraine"}, {"from": "Mongolia", "to": "Russia"}, {"from": "Montenegro", "to": "Serbia"}, {"from": "Morocco", "to": "WesternSahara"}, {"from": "Morocco", "to": "Spain"}, {"from": "Mozambique", "to": "SouthAfrica"}, {"from": "Mozambique", "to": "Tanzania"}, {"from": "Mozambique", "to": "Zambia"}, {"from": "Mozambique", "to": "Zimbabwe"}, {"from": "Myanmar", "to": "Thailand"}, {"from": "Namibia", "to": "SouthAfrica"}, {"from": "Namibia", "to": "Zambia"}, {"from": "Niger", "to": "Nigeria"}, {"from": "NorthMacedonia", "to": "Serbia"}, {"from": "Norway", "to": "Sweden"}, {"from": "Norway", "to": "Russia"}, {"from": "Oman", "to": "SaudiArabia"}, {"from": "Oman", "to": "UnitedArabEmirates"}, {"from": "Oman", "to": "Yemen"}, {"from": "Poland", "to": "Russia"}, {"from": "Poland", "to": "Slovakia"}, {"from": "Poland", "to": "Ukraine"}, {"from": "Qatar", "to": "SaudiArabia"}, {"from": "Romania", "to": "Serbia"}, {"from": "Romania", "to": "Ukraine"}, {"from": "Russia", "to": "Ukraine"}, {"from": "Rwanda", "to": "Tanzania"}, {"from": "Rwanda", "to": "Uganda"}, {"from": "SaudiArabia", "to": "UnitedArabEmirates"}, {"from": "SaudiArabia", "to": "Yemen"}, {"from": "Slovakia", "to": "Ukraine"}, {"from": "SouthAfrica", "to": "Zimbabwe"}, {"from": "SouthOssetia", "to": "Russia"}, {"from": "SouthSudan", "to": "Sudan"}, {"from": "SouthSudan", "to": "Uganda"}, {"from": "Spain", "to": "UnitedKingdom"}, {"from": "Syria", "to": "Turkey"}, {"from": "Tajikistan", "to": "Uzbekistan"}, {"from": "Tanzania", "to": "Uganda"}, {"from": "Tanzania", "to": "Zambia"}, {"from": "Turkmenistan", "to": "Uzbekistan"}, {"from": "Zambia", "to": "Zimbabwe"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

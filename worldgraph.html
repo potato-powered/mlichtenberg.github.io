@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>World Graph Visualization</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="inner">
+
+							<!-- Logo -->
+								<a href="index.html" class="logo">
+									<span class="symbol"><img src="images/logo.svg" alt="" /></span><span class="title">Matthew Lichtenberg</span>
+								</a>
+
+							<!-- Nav -->
+								<nav>
+									<ul>
+										<li><a href="#menu">Menu</a></li>
+									</ul>
+								</nav>
+
+						</div>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+						<h2>Menu</h2>
+						<ul>
+							<li><a href="index.html">Home</a></li>
+							<li><a href="aboutme.html">About Me</a></li>
+							<li><a href="resume.html">Resume</a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+							<h1>World Graph Visualization</h1>
+							<!--span class="image main"><img src="images/pic13.jpg" alt="" /></span-->
+							<p>The following represents the countries and several semi-autonomous territories of the world and how they are connected. Depending on your screen size, you may need to zoom in to see country names.</p>
+							<p>Depending on your screen size, you may need to zoom in to see country names.</p>
+
+
+					<div id="graph">
+						<script type="text/javascript">
+						    // Create a new div element to hold the visualization
+						    var container = document.getElementById('graph');
+
+						    // Create an iframe element
+						    var iframe = document.createElement('iframe');
+
+						    // Set the source of the iframe to the generated HTML file
+						    iframe.src = 'graph.html';
+
+						    // Set the attributes of the iframe
+						    iframe.width = '100%';
+						    iframe.height = '500px';
+						    iframe.frameBorder = '0';
+
+						    // Append the iframe to the container div
+						    container.appendChild(iframe);
+						</script>
+					   <!-- JavaScript code to enable free movement of all nodes -->
+					    <script type="text/javascript">
+					        // Retrieve the iframe element that contains the visualization
+					        var iframe = document.getElementsByTagName('iframe')[0];
+
+					        // Access the network object of the visualization
+					        iframe.onload = function () {
+					            var network = iframe.contentWindow.Network;
+
+					            // Access the nodes dataset of the network
+					            var nodesDataset = network.body.data.nodes;
+
+					            // Enable free movement of all nodes after a delay (e.g., 3 seconds)
+					            setTimeout(function () {
+					                var nodes = nodesDataset.get();
+					                for (var i = 0; i < nodes.length; i++) {
+					                    nodes[i].fixed = false;
+					                }
+					                nodesDataset.update(nodes);
+					            }, 2);
+					        };
+					    </script>
+					</div>
+					<div class="inner">
+						<p>
+							In 2023, I started playing a knockoff of Wordle called Travel, where the player has several tries to guess the countries required to travel between two nonadjacent countries. After a while, I started thinking about the most challenging starting and destination countries regarding the number of intermediate countries a player would need to guess correctly.
+						</p>
+                        <p>
+                        	To solve this problem, I created a graphical representation of the world's countries (and several semi-autonomous territories) and their land borders. In this representation, one can use a breadth-first search to find two connected nodes with the highest number of minimum steps to reach each other. They are Lesotho and El Salvador.
+                        </p>
+                        <p>
+                            When looking at the graphical representation of international borders, I found a few things to be interesting. The Americas are connected to the old world at two points. First through French Guiana, considered a core part of France, and second through Hans Island, which, after a border dispute resolution in 2022, created a land border between Canada and Denmark. Spain maintains colonial holdings in mainland Africa. The UK also maintains territory connecting it to Spain and Cyprus, which makes Haiti and the Dominican Republic the only countries with land borders unconnected to the broader world network. 
+						</p>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<div class="inner">
+							<section>
+								<h2>Follow</h2>
+								<ul class="icons">
+									<li><a href="#" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon brands style2 fa-facebook-f"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon brands style2 fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon brands style2 fa-dribbble"><span class="label">Dribbble</span></a></li>
+									<li><a href="#" class="icon brands style2 fa-github"><span class="label">GitHub</span></a></li>
+									<li><a href="#" class="icon brands style2 fa-500px"><span class="label">500px</span></a></li>
+									<li><a href="#" class="icon solid style2 fa-phone"><span class="label">Phone</span></a></li>
+									<li><a href="#" class="icon solid style2 fa-envelope"><span class="label">Email</span></a></li>
+								</ul>
+							</section>
+							<ul class="copyright">
+								<li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
